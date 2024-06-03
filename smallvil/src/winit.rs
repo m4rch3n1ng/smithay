@@ -4,6 +4,7 @@ use smithay::{
     backend::{
         renderer::{
             damage::OutputDamageTracker, element::surface::WaylandSurfaceRenderElement, gles::GlesRenderer,
+            ImportEgl,
         },
         winit::{self, WinitEvent},
     },
@@ -21,7 +22,7 @@ pub fn init_winit(
     let display_handle = &mut data.display_handle;
     let state = &mut data.state;
 
-    let (mut backend, winit) = winit::init()?;
+    let (mut backend, winit) = winit::init::<GlesRenderer>()?;
 
     let mode = Mode {
         size: backend.window_size(),
@@ -40,6 +41,8 @@ pub fn init_winit(
     let _global = output.create_global::<Smallvil>(display_handle);
     output.change_current_state(Some(mode), Some(Transform::Flipped180), None, Some((0, 0).into()));
     output.set_preferred(mode);
+
+    backend.renderer().bind_wl_display(display_handle).unwrap();
 
     state.space.map_output(&output, (0, 0));
 

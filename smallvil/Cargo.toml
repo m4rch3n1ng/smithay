@@ -12,6 +12,8 @@ path = "../"
 default-features = false
 features = [
     "backend_winit",
+    "backend_egl",
     "wayland_frontend",
     "desktop",
+    "use_system_lib",
 ]
